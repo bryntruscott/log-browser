@@ -2,6 +2,7 @@
 from phylter.backends.base import Backend
 from phylter.conditions import Condition, EqualsCondition, GreaterThanCondition, GreaterThanOrEqualCondition, \
 	LessThanCondition, LessThanOrEqualCondition, AndOperator, OrOperator, ConditionGroup, Operator
+from conditions import RegexMatchCondition
 import pymongo
 
 
@@ -26,6 +27,7 @@ class MongoLogBackend(Backend):
 				GreaterThanOrEqualCondition: "$gte",
 				LessThanCondition: "$lt",
 				LessThanOrEqualCondition: "$lte",
+				RegexMatchCondition: "$regex",
 			}[obj.__class__]
 
 			# exp = '"%s": {"%s": %s}' % (obj.left, op, obj.right)

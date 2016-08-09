@@ -3,10 +3,11 @@ import pyparsing
 
 from phylter.conditions import EqualsCondition, GreaterThanCondition, LessThanCondition, GreaterThanOrEqualCondition, \
 	LessThanOrEqualCondition, AndOperator, OrOperator, Condition, Operator, ConditionGroup
+from conditions import RegexMatchCondition
 from phylter.query import Query
 from phylter import parser
 
-operator_signs = ('==', '!=', '>', '<', '>=', '<=')
+operator_signs = ('==', '!=', '>', '<', '>=', '<=', '~')
 
 identifier = pyparsing.Word(pyparsing.alphanums+'_')
 operator = pyparsing.oneOf(operator_signs)
@@ -23,6 +24,8 @@ grouped_andor_field_op_value = and_or + "(" + condition + pyparsing.Optional(pyp
 
 pattern = condition + \
 		  pyparsing.Optional(pyparsing.OneOrMore(andor_field_op_value | grouped_andor_field_op_value))
+
+
 
 # sub-classing my own Parser class seems the best way to allow underscores as well as alpha-numerics in identifiers
 # will also add a regex matching condition operator
@@ -102,7 +105,8 @@ class Parser(parser.Parser):
 			'>': GreaterThanCondition,
 			'<': LessThanCondition,
 			'>=': GreaterThanOrEqualCondition,
-			'<=': LessThanOrEqualCondition
+			'<=': LessThanOrEqualCondition,
+            '~': RegexMatchCondition
 		}
 		if operator not in d:
 			raise Exception("Unknown operator '%s'" % operator)
