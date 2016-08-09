@@ -7,6 +7,10 @@ class Log(object):
         self.__collection_name = log_name
         self.__collection = pymongo.MongoClient()[self.__database][self.__collection_name]
 
+    def get_first(self):
+        cursor = self.__collection.find().sort("time", pymongo.ASCENDING)
+        return cursor.next()
+
     def get_last(self):
         cursor = self.__collection.find().sort("time", pymongo.DESCENDING)
         return cursor.next()
