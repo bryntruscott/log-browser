@@ -9,9 +9,12 @@ from phylter import parser
 
 operator_signs = ('==', '!=', '>', '<', '>=', '<=', '~')
 
+
+# allow underscores as well as alpha-numerics in identifiers
 identifier = pyparsing.Word(pyparsing.alphanums+'_')
 operator = pyparsing.oneOf(operator_signs)
-value = pyparsing.quotedString | pyparsing.Word(pyparsing.alphanums)
+# allow '+' and ':' in value so that date/time values don't need to be quoted
+value = pyparsing.quotedString | pyparsing.Word(pyparsing.alphanums+'-'+':')
 
 # covers foo == bar and (foo == bar)
 condition = identifier + operator + value | \
