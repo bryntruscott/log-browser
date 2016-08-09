@@ -1,4 +1,5 @@
 *.pyc
+log-browser/test.py
 
 venv-log-browser/
 .idea/
