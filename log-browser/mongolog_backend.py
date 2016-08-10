@@ -5,7 +5,8 @@ from phylter.conditions import Condition, EqualsCondition, GreaterThanCondition,
 from conditions import RegexMatchCondition
 import pymongo
 import datetime
-
+import string
+from bson.objectid import ObjectId
 
 class MongoLogBackend(Backend):
 
@@ -50,6 +51,14 @@ class MongoLogBackend(Backend):
 
         raise Exception("Unexpected item found in query: %s" % obj)
 
+    def _oid(self, value):
+        # an object id is formatted as 'id:<id-value>', where <id-value> is a hex string
+        if value.startswith('id:'):
+            id = ObjectId(value[3:])
+            return id
+        raise ValueError("Not an ObjectId")
+
+
     def get_compatible_value(self, value, field_type=None):
         if field_type is None:
             # see if we have an integer...
@@ -58,6 +67,14 @@ class MongoLogBackend(Backend):
                 return i
             except Exception, e:
                 # not an integer
+                pass
+
+            # ...or an ObjectID
+            try:
+                oid = self._oid(value)
+                return oid
+            except Exception, e:
+                # not a datetime
                 pass
 
             # ...or a datetime value
