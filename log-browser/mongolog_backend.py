@@ -52,12 +52,20 @@ class MongoLogBackend(Backend):
 
     def get_compatible_value(self, value, field_type=None):
         if field_type is None:
-            # see if we have a datetime value
+            # see if we have an integer...
+            try:
+                i = int(value)
+                return i
+            except Exception, e:
+                # not an integer
+                pass
+
+            # ...or a datetime value
             try:
                 dt = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
                 return dt
             except Exception, e:
-                # not a datetime. never mind
+                # not a datetime
                 pass
 
         return super(MongoLogBackend, self).get_compatible_value(value, field_type)
