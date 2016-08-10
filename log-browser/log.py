@@ -14,7 +14,7 @@ class LogTemplate(object):
     def to_string(self, entry):
         values = []
         for name in self._fields:
-            values.append(entry[name])
+            values.append(entry.get(name))
         return self._layout.format(*values)
 
 class Log(object):
@@ -55,11 +55,26 @@ class ApacheAccessTemplate(LogTemplate):
         self.set_layout("{} {} {} {} [{}] \"{}\" {} {} \"{}\" \"{}\"")
 
 
+class ApacheErrorTemplate(LogTemplate):
+    def __init__(self):
+        super(ApacheErrorTemplate, self).__init__()
+        self.add_field('_id')
+        self.add_field('cloudwatch_log_stream_name')
+        self.add_field('time')
+        self.add_field('level')
+        self.add_field('pid')
+        self.add_field('tid')
+        self.add_field('client')
+        self.add_field('message')
+        self.set_layout("{} {} [{}] [{}] [pid {}:tid {}] [client {}] {}")
+
+
 class LogFactory(object):
 
     def __init__(self):
         self._templates = {
-            'apache_access': ApacheAccessTemplate()
+            'apache_access': ApacheAccessTemplate(),
+            'apache_error': ApacheErrorTemplate(),
         }
 
     def create_log(self, system, log_name):
