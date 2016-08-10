@@ -3,7 +3,7 @@ import pyparsing
 
 from phylter.conditions import EqualsCondition, GreaterThanCondition, LessThanCondition, GreaterThanOrEqualCondition, \
 	LessThanOrEqualCondition, AndOperator, OrOperator, Condition, Operator, ConditionGroup
-from conditions import RegexMatchCondition
+from conditions import NotEqualsCondition, RegexMatchCondition
 from phylter.query import Query
 from phylter import parser
 
@@ -105,6 +105,7 @@ class Parser(parser.Parser):
 	def _get_condition_class(self, operator):
 		d = {
 			'==': EqualsCondition,
+			'!=': NotEqualsCondition,
 			'>': GreaterThanCondition,
 			'<': LessThanCondition,
 			'>=': GreaterThanOrEqualCondition,

@@ -2,7 +2,7 @@
 from phylter.backends.base import Backend
 from phylter.conditions import Condition, EqualsCondition, GreaterThanCondition, GreaterThanOrEqualCondition, \
     LessThanCondition, LessThanOrEqualCondition, AndOperator, OrOperator, ConditionGroup, Operator
-from conditions import RegexMatchCondition
+from conditions import NotEqualsCondition, RegexMatchCondition
 import pymongo
 import datetime
 import string
@@ -25,6 +25,7 @@ class MongoLogBackend(Backend):
         if isinstance(obj, Condition):
             op = {
                 EqualsCondition: "$eq",
+                NotEqualsCondition: "$ne",
                 GreaterThanCondition: "$gt",
                 GreaterThanOrEqualCondition: "$gte",
                 LessThanCondition: "$lt",
